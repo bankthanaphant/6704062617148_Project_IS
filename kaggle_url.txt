@@ -1,0 +1,3 @@
+https://www.kaggle.com/datasets/gpiosenka/70-dog-breedsimage-data-set
+
+python -m streamlit run app.py
