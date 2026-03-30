@@ -196,6 +196,7 @@ elif page == "🐶 AI แยกสายพันธุ์สุนัข":
 
     st.markdown("---")
     st.subheader("การเตรียมข้อมูล (Data Preparation)")
+    st.write("- ใช้Dataset จาก https://www.kaggle.com/datasets/gpiosenka/70-dog-breedsimage-data-set")
     st.write("- ข้อมูลรูปภาพถูกแบ่งออกเป็น 2 ชุดหลักคือ ชุดฝึกสอน (Training Set) และ ชุดตรวจสอบ (Validation Set)")
     st.write("- การปรับขนาดภาพ (Image Resizing): รูปภาพทั้งหมดจะถูกปรับขนาดให้เป็น 224x224 พิกเซล เพื่อให้สอดคล้องกับขนาด Input มาตรฐานที่โมเดล EfficientNetB0 ต้องการ")
     st.write("- เราใช้ ImageDataGenerator ในการสร้างความหลากหลายให้ชุดข้อมูล Train เช่น การหมุนภาพ (Rotation), การซูม (Zoom), การเลื่อนภาพ (Shift), และการพลิกซ้ายขวา (Horizontal Flip) ทำให้โมเดลเรียนรู้โครงสร้างของสุนัขได้ดีขึ้นในหลายๆ มุมมอง")
