@@ -76,21 +76,21 @@ if page == "📈 พยากรณ์จำนวนผู้เสียชี
     </style>
     """, unsafe_allow_html=True)
 
-    st.title("Mortality Forecast")
+    st.title("ทำนายสถิติจำนวนการตายรายอายุ")
     st.markdown("พ.ศ. 2561 – 2569 · ประเทศไทย")
 
     # Section 1
     st.markdown('<div class="section-label">01 · แนวโน้มรายปี</div>', unsafe_allow_html=True)
     yearly_deaths = df_history.groupby('Year')['Deaths'].sum().reset_index()
     fig1 = px.line(yearly_deaths, x='Year', y='Deaths', markers=True, labels={'Year': '', 'Deaths': ''})
-    fig1.update_traces(line=dict(color='#1a1a1a', width=1.5), marker=dict(size=5, color='#1a1a1a', symbol='circle'))
+    fig1.update_traces(line=dict(color="#B81919", width=1.5), marker=dict(size=5, color="#e1c8c8", symbol='circle'))
     fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=24, r=24, t=16, b=24), height=240, hovermode='x unified')
     
     with st.container(border=True):
         st.plotly_chart(fig1, use_container_width=True)
 
     # Section 2
-    st.markdown('<div class="section-label">02 · การกระจายตัวตามอายุและเพศ</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">02 · การกระจายตัวตามอายุและเพศ 2561-2568</div>', unsafe_allow_html=True)
     age_gender_deaths = df_history.groupby(['Age', 'Gender'])['Deaths'].sum().reset_index()
     age_gender_deaths['เพศ'] = age_gender_deaths['Gender'].map({0: 'ชาย', 1: 'หญิง'})
     fig2 = px.line(age_gender_deaths, x='Age', y='Deaths', color='เพศ', labels={'Age': '', 'Deaths': ''}, color_discrete_map={'ชาย': '#2563c8', 'หญิง': '#e0457b'})
@@ -136,6 +136,26 @@ if page == "📈 พยากรณ์จำนวนผู้เสียชี
         </div>
         <p class="footnote">Ensemble Learning — Random Forest + SVR + Gradient Boosting</p>
         """, unsafe_allow_html=True)
+    
+    st.subheader("การเตรียมข้อมูล (Data Preparation)")
+    st.write("- ใช้ข้อมูลจาก กรมการปกครอง https://stat.bora.dopa.go.th/stat/statnew/statMenu/newStat/home.php")
+    st.write("- เนื่องจากข้อมูลดิบเป็น .xls ซึ่งมีปัญหาเรื่องรูปแบบโครงสร้างที่ Machine Learning ไม่สามารถอ่านได้โดยตรง เลยต้องนำข้อมูลไป clean เช่น")
+    st.write("- ทำEDA แปลงข้อความ 'อายุน้อยกว่า 1 ปี' ให้เป็นเลข 0, แปลง 'อายุมากกว่า 100 ปี' ให้เป็นเลข 101, ลบแถว 'ยอดรวมทั้งหมด' ทิ้ง เพื่อไม่ให้โมเดลนำไปคำนวณปะปนกับข้อมูลรายปี")
+    st.write("- นำข้อมูลที่คลีนแล้วทั้ง 8 ปี มารวมต่อกันเป็นตาราง Dataframe ก้อนเดียว")
+    
+    st.subheader("ทฤษฎีของอัลกอริทึมที่พัฒนา (Algorithm & Theory)")
+    st.write("- Random Forest Regressor")
+    st.write("- Gradient Boosting Regressor")
+    st.write("- Support Vector Regressor - SVR")
+    st.write("- นำผลลัพธ์ที่ได้จากทั้ง 3 โมเดลมาหา 'ค่าเฉลี่ย (Average)' เพื่อเป็นคำตอบสุดท้าย ทำให้ได้การพยากรณ์ที่มีความเสถียรที่สุด")
+    
+    st.subheader("ขั้นตอนการพัฒนาโมเดล (Model Development Steps)")
+    st.write("- การแบ่งชุดข้อมูล (Train 80% /Test Split 20%)")
+    st.write("- การฝึกสอนโมเดล (Training): นำโมเดล Ensemble ที่มัดรวมทั้ง 3 อัลกอริทึม เข้าไปเรียนรู้จากชุดข้อมูล Train")
+    st.write("- การประเมินประสิทธิภาพ (Evaluation) ใช้ R2 Score: ดูว่าอธิบายความแปรปรวนข   องข้อมูล, MAE & RMSE: ดูค่าความคลาดเคลื่อนเฉลี่ย")
+    st.write("- บันทึก model เป็น .pkl และนำไปพัฒนาเป็น webApp ต่อ")
+
+    st.subheader("พัฒนาโดย นายฐายพัทธ์ เลิศวิทยาสกุล 6704062617148")
 
 
 elif page == "🐶 AI แยกสายพันธุ์สุนัข":
@@ -212,3 +232,5 @@ elif page == "🐶 AI แยกสายพันธุ์สุนัข":
     st.write("- Compile: กำหนดให้โมเดลใช้ Optimizer แบบ Adam และใช้ Loss Function แบบ Categorical Crossentropy สำหรับงานแยกหลายคลาส")
     st.write("- ฝึกสอนโมเดล (Train & Callbacks): เริ่มการเทรนโดยใช้ตัวช่วยเพื่อหยุดเทรนอัตโนมัติหากโมเดลไม่พัฒนา และตั้งให้บันทึกเฉพาะโมเดลที่แม่นยำที่สุดเท่านั้น")
     st.write("- (Deploy): นำไฟล์โมเดลที่ดีที่สุด (.keras) ไปเขียนโค้ดด้วย Streamlit เพื่อสร้าง Web App ให้ผู้ใช้อัปโหลดรูปภาพมาทดสอบได้จริง")
+
+    st.subheader("พัฒนาโดย นายฐายพัทธ์ เลิศวิทยาสกุล 6704062617148")
