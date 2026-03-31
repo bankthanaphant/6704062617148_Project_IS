@@ -173,7 +173,7 @@ elif page == "🐶 AI แยกสายพันธุ์สุนัข":
         col_index = i % 5 
         with cols[col_index]:
             filename = breed.lower().replace(' ', '_')
-            image_path = f"C:/6704062617148_Ptoject_IS/images/{filename}.jpg" 
+            image_path = f"images/{filename}.jpg"
             
             try:
                 st.image(image_path, use_container_width=True)
